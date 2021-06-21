@@ -1,0 +1,6 @@
+dependent_variable	distribution	link_function
+metabolite1	Gamma	log
+metabolite2	Gamma	log
+metabolite3	Gamma	log
+metabolite4	Gamma	log
+metabolite5	gaussian	identity

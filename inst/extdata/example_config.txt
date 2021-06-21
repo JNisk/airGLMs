@@ -1,0 +1,22 @@
+########## change parameters for analysis below
+
+# output file path
+output = example_results.txt
+
+# distribution and link function file path
+distributions = system.file("extdata", "example_distributions.txt", package="airGLMs")
+
+# name of the variable where your data is stored
+data = example_data
+
+# base model
+base model = x ~ gender
+
+# dependent variables
+dependent = metabolite1,metabolite2,metabolite3,metabolite4,metabolite5
+
+# independent variables
+independent = sterilization,population
+
+# interactions
+interactions = gender*sterilization
