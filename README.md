@@ -31,16 +31,15 @@ easy usability, as models can be selected for several dependent variables with a
 
 ## In-depth description
 
-Models for all dependent variables are selected iteratively. The process is as follows:
+Models for user-determined dependent variables are selected iteratively. The process for each dependent variable is as follows:
 
 ### Independent variables
-1) select dependent variable
-2) fit base model and save AIC value
-3) fit model with the glm function for each independent variable
-4) select independent variable whose model has the smallest AIC value
-5) compare new AIC value with previous AIC value
-6) if delta AIC > 2, add the independent variable to model
-7) repeat with remaining independing variables until delta AIC < 2 or no variables are left
+1) fit base model and save AIC value
+2) fit model with the glm function for each independent variable
+3) select independent variable whose model has the smallest AIC value
+4) compare new AIC value with previous AIC value
+5) if delta AIC > 2, add the independent variable to model
+6) repeat with remaining independing variables until delta AIC < 2 or no variables are left
 
 ### Interaction terms (optional)
 1) discard interaction terms with one or both variables not included in selected independent variables
