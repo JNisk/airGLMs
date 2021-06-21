@@ -5,9 +5,9 @@ Automatic Iterative Generalized Linear Model Selection
 
 airGLMs is an R package for automatic iterative generalized linear model (GLM) selection.
 It uses a forward stepwise selection process with Akake information criteria (AIC)
-to select models with dependent and independent variables as well as variable interaction
-terms determined by the user. The module is focused on easy usability, as models
-can be selected for several dependent variables with a single command.
+to select models with user-determined dependent and independent variables, variable interaction
+terms, distributions and link functions and output file name. The module is focused on
+easy usability, as models can be selected for several dependent variables with a single function call.
 
 ## Prerequisites
 
@@ -28,3 +28,5 @@ can be selected for several dependent variables with a single command.
     example_config <- system.file("extdata","example_config.txt",package="airGLMs")
     models <- airglms(example_config)
     models
+
+## In-depth explanation
