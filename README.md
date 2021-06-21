@@ -24,6 +24,9 @@ easy usability, as models can be selected for several dependent variables with a
     library("airGLMs")
     models <- airglms(config_file)
 
+where `config_file` is a path to a configuration file with analysis settings.
+An example config file is included at `inst/extdata/example_config.txt`.
+
 ## Demo
 
     library("airGLMs")
