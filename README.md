@@ -34,21 +34,21 @@ easy usability, as models can be selected for several dependent variables with a
 Models for all dependent variables are selected iteratively. The process is as follows:
 
 ### Independent variables
-* select dependent variable
-* fit base model and save AIC value
-* fit model with the glm function for each independent variable
-* select independent variable whose model has the smallest AIC value
-* compare new AIC value with previous AIC value
-* if delta AIC > 2, add the independent variable to model
-* repeat with remaining independing variables until delta AIC < 2 or no variables are left
+1) select dependent variable
+2) fit base model and save AIC value
+3) fit model with the glm function for each independent variable
+4) select independent variable whose model has the smallest AIC value
+5) compare new AIC value with previous AIC value
+6) if delta AIC > 2, add the independent variable to model
+7) repeat with remaining independing variables until delta AIC < 2 or no variables are left
 
 ### Interaction terms (optional)
-* discard interaction terms with one or both variables not included in selected independent variables
-* for remaining interaction terms, fit model with the glm function
-* select the interaction term whose model has the smallest AIC value
-* compare new AIC value with previous AIC value
-* if delta AIC > 2, add the independent variable to model
-* repeat with remaining interaction terms until delta AIC < 2 or no variables are left
+1) discard interaction terms with one or both variables not included in selected independent variables
+2) for remaining interaction terms, fit model with the glm function
+3) select the interaction term whose model has the smallest AIC value
+4) compare new AIC value with previous AIC value
+5) if delta AIC > 2, add the independent variable to model
+6) repeat with remaining interaction terms until delta AIC < 2 or no variables are left
 
 Selected models are returned as a character vector, and detailed information about the process
 and AIC values are written to a log file specified in the config file.
