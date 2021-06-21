@@ -4,9 +4,10 @@
 output = example_results.txt
 
 # distribution and link function file path
+# replace with an actual path when not running demo data
 distributions = system.file("extdata", "example_distributions.txt", package="airGLMs")
 
-# name of the variable where your data is stored
+# name of the data.frame where your data is
 data = example_data
 
 # base model
