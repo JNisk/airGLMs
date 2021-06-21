@@ -16,5 +16,5 @@ can be selected for several dependent variables with a single command.
 
 ## Installation
 
-`library("devtools")  
-install_github("airGLMs","JNisk")`
+    library("devtools")  
+    install_github("airGLMs","JNisk")
