@@ -9,7 +9,7 @@ to select models with user-determined dependent and independent variables, varia
 terms, distributions and link functions and output file name. The module is focused on
 easy usability, as models can be selected for several dependent variables with a single function call.
 
-## Prerequisites
+## Dependencies
 
 * R >= 4.0.5
 * devtools >= 2.4.2
