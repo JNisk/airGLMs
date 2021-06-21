@@ -19,6 +19,11 @@ easy usability, as models can be selected for several dependent variables with a
     library("devtools")  
     install_github("airGLMs","JNisk")
 
+## Usage
+
+    library("airGLMs")
+    models <- airglms(config_file)
+
 ## Demo
 
     library("airGLMs")
