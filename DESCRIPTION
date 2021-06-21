@@ -14,15 +14,14 @@ Authors@R:
     person(given = "Jenni",
            family = "Puurunen",
            role = "ctb",
-		   comment = c(ORCID = "0000-0001-5166-493X")),
+           comment = c(ORCID = "0000-0001-5166-493X")),
     person(given = "Hannes",
            family = "Lohi",
            role = "led",
-		   email = "hannes.lohi@helsinki.fi",
-		   comment = c(ORCID = "0000-0003-1087-5532")))
+           email = "hannes.lohi@helsinki.fi",
+           comment = c(ORCID = "0000-0003-1087-5532")))
 Description: Automatic selection of generalized linear models with forward stepwise selection and AIC.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License:
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 4.0.5)
