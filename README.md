@@ -27,6 +27,6 @@ easy usability, as models can be selected for several dependent variables with a
 
     example_config <- system.file("extdata","example_config.txt",package="airGLMs")
     models <- airglms(example_config)
-    models
+    head(models)
 
 ## In-depth explanation
