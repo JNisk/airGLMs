@@ -157,9 +157,9 @@ airglms <- function(config_file, verbose=FALSE){
 	cat("initiate airglms\n")
 	cat(paste("data.frame:",config$data,"\n"))
 	cat(paste("base model:",config$base_model,"\n"))
-	cat(paste("dependent variables:",paste(config$dependent, collapse=", "),"\n")
-	cat(paste("independent variables:",paste(config$independent, collapse=", "),"\n")
-	cat(paste("interactions:",paste(config$interactions, collapse=", "),"\n")
+	cat(paste("dependent variables:",paste(config$dependent, collapse=", "),"\n"))
+	cat(paste("independent variables:",paste(config$independent, collapse=", "),"\n"))
+	cat(paste("interactions:",paste(config$interactions, collapse=", "),"\n"))
 	cat(paste("distribution table:",config$table,"\n")
 	cat(paste("output file:",log_file,"\n"))
 
