@@ -85,7 +85,7 @@ generated during the run (default in the demo: `example_results.txt`).
 
 ## In-depth description
 
-Models for user-determined dependent variables are selected iteratively. The flowchart of the process is depicted below:
+Models for each dependent variable are selected iteratively. The flowchart of the process is depicted below:
 
 ![Flowchart of airGLMs algorithm](https://github.com/JNisk/airGLMs/blob/main/images/airGLMs.png?raw=true)
 
