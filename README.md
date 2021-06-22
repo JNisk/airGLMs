@@ -17,7 +17,7 @@ easy usability, as models for several dependent variables can be fitted with a s
 ## Installation
 
     library("devtools")  
-    install_github("airGLMs","JNisk")
+    devtools::install_github("JNisk/airGLMs")
 
 ## Usage
 
