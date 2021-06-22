@@ -21,7 +21,7 @@ Authors@R:
            email = "hannes.lohi@helsinki.fi",
            comment = c(ORCID = "0000-0003-1087-5532")))
 Description: Automatic selection of generalized linear models with forward stepwise selection and AIC.
-License:
+License: GNU General Public License v3.0
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 4.0.5)
