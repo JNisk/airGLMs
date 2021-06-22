@@ -186,7 +186,7 @@ airglms <- function(config_file, verbose=FALSE){
 
 	config$data <- eval(parse(text = config$data))
 
-	write_log(file=log_file, "in the data, found:")
+	write_log(file=log_file, "in the data frame", config$data, ", found:")
 	write_log(file=log_file, ncol(config$data), "columns")
 	write_log(file=log_file, nrow(config$data), "rows")
 
