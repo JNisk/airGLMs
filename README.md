@@ -32,7 +32,6 @@ An example config file is included at `inst/extdata/example_config.txt`.
     > library("airGLMs")
     > example_data <- read.table(system.file("extdata", "example_data.txt", package="airGLMs"), header=T, sep="\t")
     > head(example_data)
-    
            id gender sterilization population metabolite1 metabolite2 metabolite3 metabolite4 metabolite5
     1 animal1      2             2          1    1.044836    8.068995   0.1413869    5.139955   0.09383798
     2 animal2      1             2          1    1.279460    3.865621   0.1820434    5.219343   0.07448186
@@ -44,6 +43,16 @@ An example config file is included at `inst/extdata/example_config.txt`.
     > example_config <- system.file("extdata","example_config.txt",package="airGLMs")
     > models <- airglms(example_config)
     > head(models)
+                                                        metabolite1 
+                                             "metabolite1 ~ gender" 
+                                                        metabolite2 
+                             "metabolite2 ~ gender + sterilization" 
+                                                        metabolite3 
+                                "metabolite3 ~ gender + population" 
+                                                        metabolite4 
+    "metabolite4 ~ gender + sterilization + gender * sterilization" 
+                                                        metabolite5 
+                                             "metabolite5 ~ gender" 
 
 ## In-depth description
 
