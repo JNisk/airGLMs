@@ -24,8 +24,12 @@ easy usability, as models for several dependent variables can be fitted with a s
     library("airGLMs")
     models <- airglms(config_file)
 
-where `config_file` is a path to a configuration file with analysis settings.
-An example config file is included at `inst/extdata/example_config.txt`.
+where `config_file` is a path to a configuration file with analysis settings. An example config file
+is included at `inst/extdata/example_config.txt`.
+
+Two kinds of output will be generated: a brief description of the analysis parameters in the console,
+and more detailed output, including stepwise AIC values, is written to the output file specified by
+the user in the config file. For more detailed output during the run, you can add option `verbose=TRUE`.
 
 ## Demo
 
