@@ -154,7 +154,7 @@ airglms <- function(config_file, verbose=FALSE){
 	write_log(file=log_file, "* interactions:", paste(config$interactions, collapse=", "))
 	write_log(file=log_file, "* distribution table:",config$table)
 	
-	cat("initiate airglms\n")
+	cat("initiate airglms\n\n")
 	cat(paste("data.frame:",config$data,"\n"))
 	cat(paste("base model:",config$base_model,"\n"))
 	cat(paste("dependent variables:",paste(config$dependent, collapse=", "),"\n"))
@@ -239,11 +239,15 @@ airglms <- function(config_file, verbose=FALSE){
 	# text for a nice log 
 	round_text <- "\n... round"
 
+	cat("\ninitiating selection"\n")
+	
 	# use one dependent variable (d) at a time
 	for (d in config$dependent) {
 	  	  
 	  if (verbose) {
 		cat(paste("\n\n*** ",d," ***\n", sep=""))
+	  } else {
+		cat(paste(d,"\n"))
 	  }
 	  
 	  write_log(file=log_file, "\n-----")
@@ -501,7 +505,9 @@ airglms <- function(config_file, verbose=FALSE){
 		for (d in selected_models) {
 			cat(paste(d,"\n"))
 			}
-		}
+	} else {
+		cat("\nfinished run"\n")
+	}
 
 	return(selected_models)
 	
