@@ -506,7 +506,7 @@ airglms <- function(config_file, verbose=FALSE){
 			cat(paste(d,"\n"))
 			}
 	} else {
-		cat("\nfinished run"\n")
+		cat("\nfinished run\n")
 	}
 
 	return(selected_models)
