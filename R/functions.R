@@ -146,14 +146,22 @@ airglms <- function(config_file, verbose=FALSE){
 
 	write_log(file=log_file, "read config file from:",config_file)
 	write_log(file=log_file, "\nusing the following settings:")
-	write_log(file=log_file, "* data variable name:",config$data)
 	write_log(file=log_file, "* output file:",log_file)
-	write_log(file=log_file, "* distribution table:",config$table)
+	write_log(file=log_file, "* data.frame:",config$data)
 	write_log(file=log_file, "* base model:",config$base_model)
 	write_log(file=log_file, "* dependent variables:", paste(config$dependent, collapse=", "))
 	write_log(file=log_file, "* independent variables:", paste(config$independent, collapse=", "))
 	write_log(file=log_file, "* interactions:", paste(config$interactions, collapse=", "))
-
+	write_log(file=log_file, "* distribution table:",config$table)
+	
+	cat("initiate airglms\n")
+	cat(paste("data.frame:",config$data,"\n"))
+	cat(paste("base model:",config$base_model,"\n"))
+	cat(paste("dependent variables:",paste(config$dependent, collapse=", "),"\n")
+	cat(paste("independent variables:",paste(config$independent, collapse=", "),"\n")
+	cat(paste("interactions:",paste(config$interactions, collapse=", "),"\n")
+	cat(paste("distribution table:",config$table,"\n")
+	cat(paste("output file:",log_file,"\n"))
 
 	### open distribution table file
 
