@@ -5,6 +5,7 @@
 #' @param line Line of text from the config file
 #' @param comma_split Whether the line is split by commas. Default: no (NULL).
 #' @keywords parameter
+#' @export
 #' @examples
 #' get_parameter("output = myfile.txt")
 
@@ -23,6 +24,7 @@ get_parameter <- function(line, comma_split = NULL){
 #' @param file Filename
 #' @param ... One or more R objects to be written as text to the file.
 #' @keywords log
+#' @export
 #' @examples
 #' write_log("mylog.txt", "Hello world!")
 
@@ -37,6 +39,7 @@ write_log <- function(file, ...){
 #' Returns a list.
 #' @param text_formula A string representation of a formula.
 #' @keywords variable
+#' @export
 #' @examples
 #' extract_variables("x ~ a + b")
 
@@ -52,6 +55,7 @@ extract_variables <- function(text_formula){
 #' Returns a list.
 #' @param interaction A string representation of an interaction formula.
 #' @keywords variable
+#' @export
 #' @examples
 #' extract_variables("a * b")
 
@@ -66,6 +70,7 @@ extract_interaction_variables <- function(interaction){
 #' Returns a character vector.
 #' @param interaction A string representation of an interaction formula.
 #' @keywords interaction
+#' @export
 #' @examples
 #' extract_variables("a*b")
 
