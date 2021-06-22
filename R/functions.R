@@ -239,7 +239,7 @@ airglms <- function(config_file, verbose=FALSE){
 	# text for a nice log 
 	round_text <- "\n... round"
 
-	cat("\ninitiating selection"\n")
+	cat("\ninitiating selection\n")
 	
 	# use one dependent variable (d) at a time
 	for (d in config$dependent) {
