@@ -29,13 +29,21 @@ An example config file is included at `inst/extdata/example_config.txt`.
 
 ## Demo
 
-    library("airGLMs")
-    example_data <- read.table(system.file("extdata", "example_data.txt", package="airGLMs"), header=T, sep="\t")
-    head(example_data)
+    > library("airGLMs")
+    > example_data <- read.table(system.file("extdata", "example_data.txt", package="airGLMs"), header=T, sep="\t")
+    > head(example_data)
+    
+           id gender sterilization population metabolite1 metabolite2 metabolite3 metabolite4 metabolite5
+    1 animal1      2             2          1    1.044836    8.068995   0.1413869    5.139955   0.09383798
+    2 animal2      1             2          1    1.279460    3.865621   0.1820434    5.219343   0.07448186
+    3 animal3      2             2          1    1.339995    4.372346   0.1451240    5.090788   0.03456361
+    4 animal4      1             2          1    1.189126    1.225629   0.1789631    8.230903   0.09430225
+    5 animal5      2             2          1    1.287063    1.346630   0.1238135    6.138686   0.02224719
+    6 animal6      1             2          1    1.263728    6.654097   0.1077216    5.745389   0.04984494
 
-    example_config <- system.file("extdata","example_config.txt",package="airGLMs")
-    models <- airglms(example_config)
-    head(models)
+    > example_config <- system.file("extdata","example_config.txt",package="airGLMs")
+    > models <- airglms(example_config)
+    > head(models)
 
 ## In-depth description
 
