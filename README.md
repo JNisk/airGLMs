@@ -85,23 +85,7 @@ generated during the run (default: `results.txt`).
 
 ## In-depth description
 
-Models for user-determined dependent variables are selected iteratively. The process for each dependent variable is as follows:
+Models for user-determined dependent variables are selected iteratively. The flowchart of the process is depicted below:
 
-### Independent variables
-1) fit base model and save AIC value
-2) fit model with the glm function for each independent variable
-3) select independent variable whose model has the smallest AIC value
-4) compare new AIC value with previous AIC value
-5) if delta AIC > 2, add the independent variable to model
-6) repeat with remaining independing variables until delta AIC < 2 or no variables are left
+![Flowchart of airGLMs algorithm](https://github.com/JNisk/airGLMs/blob/main/images/airGLMs.png?raw=true)
 
-### Interaction terms (optional)
-1) discard interaction terms with one or both variables not included in selected independent variables
-2) for remaining interaction terms, fit model with the glm function
-3) select the interaction term whose model has the smallest AIC value
-4) compare new AIC value with previous AIC value
-5) if delta AIC > 2, add the independent variable to model
-6) repeat with remaining interaction terms until delta AIC < 2 or no variables are left
-
-Selected models are returned as a character vector, and detailed information about the process
-and AIC values are written to a log file specified in the config file.
