@@ -49,6 +49,25 @@ the user in the config file. For more detailed output during the run, you can ad
 
     > example_config <- system.file("extdata","example_config.txt",package="airGLMs")
     > models <- airglms(example_config)
+    initiate airglms
+
+    data.frame: example_data 
+    base model: x ~ gender 
+    dependent variables: metabolite1, metabolite2, metabolite3, metabolite4, metabolite5 
+    independent variables: sterilization, population 
+    interactions: gender * sterilization 
+    distribution table: C:/rlibs/4.0.5/airGLMs/extdata/example_distributions.txt 
+    output file: example_results.txt 
+
+    initiate selection
+    metabolite1 
+    metabolite2 
+    metabolite3 
+    metabolite4 
+    metabolite5 
+
+    finished run
+    
     > head(models)
                                                         metabolite1 
                                              "metabolite1 ~ gender" 
