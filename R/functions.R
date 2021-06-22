@@ -160,7 +160,7 @@ airglms <- function(config_file, verbose=FALSE){
 	cat(paste("dependent variables:",paste(config$dependent, collapse=", "),"\n"))
 	cat(paste("independent variables:",paste(config$independent, collapse=", "),"\n"))
 	cat(paste("interactions:",paste(config$interactions, collapse=", "),"\n"))
-	cat(paste("distribution table:",config$table,"\n")
+	cat(paste("distribution table:",config$table,"\n"))
 	cat(paste("output file:",log_file,"\n"))
 
 	### open distribution table file
