@@ -81,7 +81,7 @@ the user in the config file. For more detailed output during the run, you can ad
                                              "metabolite5 ~ gender" 
 
 A full log of the selection process, including stepwise AIC values, can be found in the output file
-generated during the run (default: `results.txt`).
+generated during the run (default in the demo: `example_results.txt`).
 
 ## In-depth description
 
