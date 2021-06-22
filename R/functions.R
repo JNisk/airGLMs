@@ -119,11 +119,12 @@ airglms <- function(config_file, verbose=FALSE){
 	  # distribution table name
 	  } else if (startsWith(line, "distributions = ")) {
 	    param <- get_parameter(line)
+		
+		# if demo mode in use, use proper extdata path
 		if (startsWith(param, "system.file")) {
 			param <- paste(system.file("extdata", "example_distributions.txt", package="airGLMs"))
 		}
 		config$table <- param
-		#config$table <- get_parameter(line)
 		
 	  # base model
 	  } else if (startsWith(line, "base model = ")) {
