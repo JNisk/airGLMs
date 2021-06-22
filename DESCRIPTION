@@ -14,12 +14,7 @@ Authors@R:
     person(given = "Jenni",
            family = "Puurunen",
            role = "ctb",
-           comment = c(ORCID = "0000-0001-5166-493X")),
-    person(given = "Hannes",
-           family = "Lohi",
-           role = "led",
-           email = "hannes.lohi@helsinki.fi",
-           comment = c(ORCID = "0000-0003-1087-5532")))
+           comment = c(ORCID = "0000-0001-5166-493X")))
 Description: Automatic selection of generalized linear models with forward stepwise selection and AIC.
 License: GNU General Public License v3.0
 Encoding: UTF-8
