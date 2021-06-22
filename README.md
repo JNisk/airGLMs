@@ -54,6 +54,8 @@ An example config file is included at `inst/extdata/example_config.txt`.
                                                         metabolite5 
                                              "metabolite5 ~ gender" 
 
+A full log of the selection process, including stepwise AIC values, can be found in the output file (default: `results.txt`).
+
 ## In-depth description
 
 Models for user-determined dependent variables are selected iteratively. The process for each dependent variable is as follows:
