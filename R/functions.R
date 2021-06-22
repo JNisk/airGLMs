@@ -220,12 +220,13 @@ airglms <- function(config_file, verbose=FALSE){
 		all_variables <- c(extract_variables(config$base_model)[[1]],config$independent)
 	  
 		for (i in config$interactions) {
-		tmp_variables <- extract_interaction_variables(i)
-		if (!all(tmp_variables %in% all_variables)) {
-		  write_log(file=log_file, "ERROR: did not find all variables of interaction",i)
-		  stop(paste("not all variables of interaction",i,"found in base model and independent variables"))
-		}
-	  }
+		  tmp_variables <- extract_interaction_variables(i)
+		  if (!all(tmp_variables %in% all_variables)) {
+		    write_log(file=log_file, "ERROR: did not find all variables of interaction",i)
+		    stop(paste("not all variables of interaction",i,"found in base model and independent variables"))
+		  }
+		write_log(file=log_file, "ok")
+	        }
 	}
 
 	### main loop
