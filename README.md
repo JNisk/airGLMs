@@ -38,6 +38,9 @@ the user in the config file. For more detailed output during the run, you can ad
 
     > library("airGLMs")
     > example_data <- read.table(system.file("extdata", "example_data.txt", package="airGLMs"), header=T, sep="\t")
+    > example_data$gender <- as.factor(example_data$gender)
+    > example_data$sterilization <- as.factor(example_data$sterilization)
+    > example_data$population <- as.factor(example_data$population)
     > head(example_data)
            id gender sterilization population metabolite1 metabolite2 metabolite3 metabolite4 metabolite5
     1 animal1      2             2          1    1.044836    8.068995   0.1413869    5.139955   0.09383798
@@ -72,7 +75,7 @@ the user in the config file. For more detailed output during the run, you can ad
                                                         metabolite1 
                                              "metabolite1 ~ gender" 
                                                         metabolite2 
-                             "metabolite2 ~ gender + sterilization" 
+                "metabolite2 ~ gender + sterilization + population" 
                                                         metabolite3 
                                 "metabolite3 ~ gender + population" 
                                                         metabolite4 
