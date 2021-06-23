@@ -28,7 +28,7 @@ are tested and added sequentially, which reduces runtime and memory load.
     models <- airglms(config_file)
 
 where `config_file` is a path to a configuration file with analysis settings. An example config file
-is included at `inst/extdata/example_config.txt`.
+is included at [inst/extdata/example_config.txt](https://github.com/JNisk/airGLMs/blob/main/inst/extdata/example_config.txt).
 
 Two kinds of output will be generated: a brief description of the analysis parameters in the console,
 and more detailed output, including stepwise AIC values, is written to the output file specified by
