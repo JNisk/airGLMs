@@ -30,9 +30,15 @@ are tested and added sequentially, which reduces runtime and memory load.
 where `config_file` is a path to a configuration file with analysis settings. An example config file
 is included at [inst/extdata/example_config.txt](https://github.com/JNisk/airGLMs/blob/main/inst/extdata/example_config.txt).
 
-Two kinds of output will be generated: a brief description of the analysis parameters in the console,
-and more detailed output, including stepwise AIC values, is written to the output file specified by
-the user in the config file. For more detailed output during the run, you can add option `verbose=TRUE`.
+An object containing the selected formula and a dataframe with stepwise AIC values for each dependent variable is returned. By default,
+the dataframe is sorted by the order of the independent variables and interaction terms in the config file. To obtain dataframes sorted
+by the AIC values, use option `sort="AIC"`. Also, two kinds of output are produced: a brief description of the analysis parameters in the console,
+and more detailed log, including stepwise the AIC values, is written to the output file specified by the user in the config file. For 
+detailed output during the run, you can add option `verbose=TRUE`.
+
+Do note that airglms will raise a warning if missing data (NA) is detected in columns that are included in the base model, dependent variables
+or independent variables. If you encounter this warning, make sure to preprocess your data in a meaningful manner, as AIC should not be
+used with missing data points.
 
 In addition to the main functionality, you can also utilize helper functions `extract_variables` and `extract_interaction_variables`
 to extract variable names from text formulas and interaction terms, respectively. Finally, function `clean_interaction` can be used to
@@ -85,17 +91,61 @@ ensure constant whitespacing in text interaction terms.
 
     finished run
     
-    > head(models)
-                                                        metabolite1 
-                                             "metabolite1 ~ gender" 
-                                                        metabolite2 
-                "metabolite2 ~ gender + sterilization + population" 
-                                                        metabolite3 
-                                "metabolite3 ~ gender + population" 
-                                                        metabolite4 
-    "metabolite4 ~ gender + sterilization + gender * sterilization" 
-                                                        metabolite5 
-                                             "metabolite5 ~ gender" 
+    > models
+    $metabolite1
+    $metabolite1$formula
+    [1] "metabolite1 ~ gender"
+
+    $metabolite1$AIC
+                         metabolite1 ~ gender
+    metabolite1 ~ gender     3.97547479855492
+    sterilization            4.41767088400479
+    population               2.09808174145804
+
+
+    $metabolite2
+    $metabolite2$formula
+    [1] "metabolite2 ~ gender + population"
+
+    $metabolite2$AIC
+                         metabolite2 ~ gender     + population
+    metabolite2 ~ gender     244.134763387494                 
+    sterilization            245.911514129003 243.788738728259
+    population               241.950605943952                 
+    
+
+    $metabolite3
+    $metabolite3$formula
+    [1] "metabolite3 ~ gender + population"
+
+    $metabolite3$AIC
+                         metabolite3 ~ gender      + population
+    metabolite3 ~ gender    -51.1899719495492                  
+    sterilization             -49.24248213259 -184.472867756109
+    population              -186.321282984104                  
+
+
+    $metabolite4
+    $metabolite4$formula
+    [1] "metabolite4 ~ gender + population"
+    
+    $metabolite4$AIC
+                         metabolite4 ~ gender     + population
+    metabolite4 ~ gender     187.072728054696                 
+    sterilization            188.295383832006 185.785732566012
+    population               184.361896509834                 
+    
+
+    $metabolite5
+    $metabolite5$formula
+    [1] "metabolite5 ~ gender"
+
+    $metabolite5$AIC
+                         metabolite5 ~ gender
+    metabolite5 ~ gender    -208.903966099404
+    sterilization           -207.753825389241
+    population              -207.126193507209
+    
 
 A full log of the selection process, including stepwise AIC values, can be found in the output file
 generated during the run (default in the demo: `example_results.txt`).
