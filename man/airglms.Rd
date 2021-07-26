@@ -4,7 +4,7 @@
 \alias{airglms}
 \title{Select generalized linear models automatically}
 \usage{
-airglms(config_file, verbose = FALSE)
+airglms(config_file, verbose = FALSE, sort = "default")
 }
 \arguments{
 \item{config_file}{Name of the configuration file with analysis settings.}
