@@ -14,6 +14,6 @@ This function is used to extract variables from a text interaction formula.
 Returns a list.
 }
 \examples{
-extract_variables("a * b")
+extract_interaction_variables("a * b")
 }
 \keyword{variable}
