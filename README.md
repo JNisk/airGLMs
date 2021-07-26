@@ -35,7 +35,7 @@ and more detailed output, including stepwise AIC values, is written to the outpu
 the user in the config file. For more detailed output during the run, you can add option `verbose=TRUE`.
 
 In addition to the main functionality, you can also utilize helper functions `extract_variables` and `extract_interaction_variables`
-to get variables from text formulas and interaction terms, respectively. Finally, function `clean_interaction` can be used to
+to extract variable names from text formulas and interaction terms, respectively. Finally, function `clean_interaction` can be used to
 ensure constant whitespacing in text interaction terms.
 
     > extract_variables("x ~ gender + population + gender*population")
@@ -45,7 +45,7 @@ ensure constant whitespacing in text interaction terms.
     > clean_interaction("gender*population")
     [1] "gender * population"
     
-    > interaction_variables <- extract_interaction_variables("gender * population")
+    > extract_interaction_variables <- extract_interaction_variables("gender * population")
     [1] "gender"     "population"
 
 ## Demo
