@@ -19,8 +19,9 @@ distributions and link functions, base model, data frame and
 output file name are determined by the user in a configuration file.
 GLM selection is performed with forward stepwise selection
 using Akaike information criteria.
-Returns a character vector with models for each dependent variable,
-and writes detailed output to the file specified.
+Returns an object with a character vector (selected model) and data frame
+(stepwise AIC values) for each dependent variable, and writes detailed
+output to the file specified.
 }
 \examples{
 airglms("myconfig.txt")
