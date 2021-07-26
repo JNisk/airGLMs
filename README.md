@@ -14,8 +14,8 @@ are tested and added sequentially, which reduces runtime and memory load.
 
 ## Dependencies
 
-* R >= 4.0.5
-* devtools >= 2.4.2
+* R >= 3.6.3
+* devtools >= 2.4.2 (for installation)
 
 ## Installation
 
