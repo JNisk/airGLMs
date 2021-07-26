@@ -14,6 +14,6 @@ This function is used to introduce consistent whitespaces in a text interaction 
 Returns a character vector.
 }
 \examples{
-extract_variables("a*b")
+clean_interaction("a*b")
 }
 \keyword{interaction}
