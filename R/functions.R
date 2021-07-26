@@ -97,7 +97,11 @@ clean_interaction <- function(text_interaction){
 #' @examples
 #' airglms("myconfig.txt")
 
-airglms <- function(config_file, verbose=FALSE){
+airglms <- function(config_file, verbose=FALSE, sort="default"){
+
+  if (sort != "default" && sort != "AIC") {
+    stop("invalid value for option sort (use either 'default' or 'AIC')")
+  }
 
   # create a named list where parameters from config file will be stored
   config <- list()
@@ -143,13 +147,13 @@ airglms <- function(config_file, verbose=FALSE){
       config$interactions <- get_parameter(line, comma_split=TRUE)
     }
   }
-
+  
   # clean interaction terms
   config$interactions <- lapply(config$interactions, clean_interaction)
-
+  
   # start writing log (first time only without write_log wrapper function)
   write(paste("started run: ", Sys.time(), "\n", sep=""), file=log_file)
-
+  
   write_log(file=log_file, "read config file from:",config_file)
   write_log(file=log_file, "\nusing the following settings:")
   write_log(file=log_file, "* output file:",log_file)
@@ -168,58 +172,58 @@ airglms <- function(config_file, verbose=FALSE){
   cat(paste("interactions:",paste(config$interactions, collapse=", "),"\n"))
   cat(paste("distribution table:",config$table,"\n"))
   cat(paste("output file:",log_file,"\n"))
-
+  
   ### open distribution table file
-
+  
   # open distribution file and read lines to list
   table_file <- read.table(config$table, header=T, stringsAsFactors=FALSE)
   rownames(table_file) <- table_file[,1]
   table_file[,1] <- NULL
-
+  
   ### access and cross-check data
-
+  
   write_log(file=log_file, "\naccessing data")
-
+  
   if(!(exists(config$data))) {
     stop(paste("no such variable found:",config$data,sep=" "))
   }
-
+  
   config$data <- eval(parse(text = config$data))
-
+  
   write_log(file=log_file, "in the data frame, found:")
   write_log(file=log_file, ncol(config$data), "columns")
   write_log(file=log_file, nrow(config$data), "rows")
-
+  
   #### check that dependent and independent variables exist in data
   write_log(file=log_file, "\nchecking that variable names exist in data")
-
+  
   if (!all(config$dependent %in% colnames(config$data))) {
     write_log(file=log_file, "\nERROR: did not find all dependent variables in data")
     stop("not all dependent variables found in data")
   } else {
     write_log(file=log_file, "dependent variables: ok")
   }
-
+  
   if (!all(config$independent %in% colnames(config$data))) {
     write_log(file=log_file, "\nERROR: did not find all independent variables in data")
     stop("not all independent variables found in data")
   } else {
     write_log(file=log_file, "independent variables: ok")
   }
-
+  
   ### check that dependent variables exist in distribution table
-
+  
   write_log(file=log_file, "\nchecking that all dependent variables are in the distribution table file")
-
+  
   if (all(config$dependent %in% rownames(table_file))) {
     write_log(file=log_file, "ok")
   } else {
     write_log(file=log_file, "ERROR: did not find all dependent variables")
     stop(paste("not all dependent variables found in the distribution table"))
   }
-
+  
   ### check that variables in interactions exist in base model + independent variables
-
+  
   if (length(config$interactions) > 0) {
     
     write_log(file=log_file, "\nchecking that variables of interactions exist")
@@ -234,23 +238,37 @@ airglms <- function(config_file, verbose=FALSE){
     write_log(file=log_file, "ok")
     }
   }
-
+  
+  ### check that there are no NA's in data
+  
+  base_variables <- extract_variables(config$base_model)
+  
+  for (col in colnames(config$data)) {
+    if (col %in% base_variables || col %in% config$independent || col %in% config$dependent) {
+	  num_na = sum(is.na(config$data[[col]]))
+	  if (num_na > 0) {
+	    warning(paste(c(num_na," missing values (NA) detected in column '",col,"'"), sep=""))
+      }
+	}
+  }
+  
+  
   ### main loop
-
+  
   write_log(file=log_file, "\nstart iteration")
-
+  
   # named list
   #selected_models <- setNames(c(rep("",length(config$dependent))), c(config$dependent))
   selected_models <- list()
-
+  
   # text for a nice log 
   round_text <- "\n... round"
-
+  
   cat("\ninitiate selection\n")
   
   # use one dependent variable (d) at a time
   for (d in config$dependent) {
-    
+	
     # nested list for storing formula and AIC values
     selected_models[[d]] <- list()  
   
@@ -275,7 +293,8 @@ airglms <- function(config_file, verbose=FALSE){
     # convert base model from text to formula
     # replace x with dependent variable
     text_formula <- gsub("x ~", paste(d," ~", sep=""), config$base_model)
-    
+    variable_order <- c(text_formula)
+	
     df <- data.frame("tmp"=rep("",length(config$independent)+1))
     names(df)[1] <- text_formula
     rownames(df) <- c(c(text_formula),config$independent)
@@ -347,13 +366,14 @@ airglms <- function(config_file, verbose=FALSE){
         current_aic <- as.numeric(temp_aic[[best_variable]])
         # drop best variable from next round
         remaining_variables <- remaining_variables[!remaining_variables == best_variable]
-        
+        variable_order <- append(variable_order,best_variable)
+		
         write_log(file=log_file, "AIC difference > 2, add variable to model and continue")
         
         # update model and AIC dataframe
         text_formula <- paste(text_formula, "+", best_variable)
         df["tmp"] <- ""
-        names(df)[iter_round+1] <- text_formula
+        names(df)[length(df)] <- text_formula
         
         if (verbose) {
           cat("delta AIC > 2\n")
@@ -377,14 +397,26 @@ airglms <- function(config_file, verbose=FALSE){
         
         if (verbose) {
           cat("delta AIC < 2\n")
+		  cat(paste("\nformula:",text_formula,"\n"))
         }
         
         write_log(file=log_file, "AIC difference < 2, finished independent variables")
       }
     
       iter_round <- iter_round + 1
+
     }
-    
+	
+    # update variable order by AIC
+    # from smallest to largest
+
+	if (length(remaining_variables) > 0) {
+		remaining_variables_order <- names(temp_aic[order(unlist(temp_aic))])
+	} else {
+		remaining_variables_order <- c()
+	}
+    variable_order <- append(variable_order, remaining_variables_order)
+
     # check from text formula which independent variables were included
     included_variables <- extract_variables(text_formula)[[1]]
     
@@ -416,6 +448,12 @@ airglms <- function(config_file, verbose=FALSE){
     # test all interactions that include both  independent variables in the model
     if (length(remaining_interactions) > 0) {
       
+      # add interactions to dataframe
+	  for (i in remaining_interactions) {
+	    df[nrow(df)+1,] <- ""
+		rownames(df)[nrow(df)] <- i
+	  }
+	  
       improvement <- TRUE
       while (improvement) {
         
@@ -432,9 +470,10 @@ airglms <- function(config_file, verbose=FALSE){
           
           tmp_model <- glm(formula, data=config$data, family=do.call(distribution, list(link=link_function)))
           
-          # replace 0 with AIC
-          temp_aic[[i]] <- tmp_model$aic
-          
+          # replace 0 with AIC and update df
+          temp_aic[[i]] <- as.numeric(tmp_model$aic)
+          df[i,text_formula] <- as.numeric(tmp_model$aic)
+		  
           write_log(file=log_file, i,temp_aic[[i]])
         }
         
@@ -458,11 +497,13 @@ airglms <- function(config_file, verbose=FALSE){
           current_aic <- temp_aic[[best_interaction]]
           # drop best variable from next round
           remaining_interactions <- remaining_interactions[!remaining_interactions == best_interaction]
-          
+          variable_order <- append(variable_order,best_interaction)
+		  
           write_log(file=log_file, "AIC difference > 2, add interaction to model and continue")
           
-          # update model
+          # update model and df
           text_formula <- paste(text_formula, "+", best_interaction)
+		  
           if (verbose) {
             cat("delta AIC > 2\n")
             cat(paste("\nformula:",text_formula,"\n"))
@@ -482,10 +523,11 @@ airglms <- function(config_file, verbose=FALSE){
         } else {
           # this triggers the loop to end
           improvement <- FALSE
-          
+		  
           if (verbose) {
-            paste("delta AIC > 2\n")
+            cat(paste("delta AIC < 2\n"))
           }
+
           write_log(file=log_file, "AIC difference < 2, finished interactions")
         }
         iter_round <- iter_round + 1
@@ -500,7 +542,21 @@ airglms <- function(config_file, verbose=FALSE){
         cat("\nno interactions selected or none included both variables in the model\n")
       }
     }
-    
+
+    if (verbose) {
+      cat(paste("\nfinal formula:",text_formula,"\n"))
+    }
+	
+	# establish order of interactions by AIC
+	# from smallest to largest
+
+	if (length(remaining_interactions) > 0) {
+		remaining_interactions_order <- names(temp_aic[order(unlist(temp_aic))])
+	} else {
+		remaining_interactions_order <- c()
+	}
+    variable_order <- append(variable_order, remaining_interactions_order)
+
     # save selected model
     selected_models[[d]][["formula"]] <- text_formula
     # update df names
@@ -510,6 +566,20 @@ airglms <- function(config_file, verbose=FALSE){
         colnames(df)[n] <- paste("+",tmp[[length(tmp)]])
       }
     }
+		
+	# sort dataframe
+    if (sort == "AIC") {
+      if (ncol(df) == 1) {
+	    # temporarily add dummy column to enable sorting
+		# sorting of one-column dataframes is tricky
+	    df$dummy <- NA
+        df <- df[order(df[[1]], decreasing=TRUE),]
+		df$dummy <- NULL
+      } else {
+		df <- df[match(rownames(df), variable_order),]
+      }
+    }
+	
     selected_models[[d]][["AIC"]] <- df
     
   }
@@ -528,13 +598,11 @@ airglms <- function(config_file, verbose=FALSE){
   
   if (verbose) {
     cat("\n*** selected models ***\n\n")
-    for (d in selected_models) {
-      cat(paste(d,"\n"))
-    }
+    print(selected_models)
   } else {
     cat("\nfinished run\n")
   }
-
+  
   return(selected_models)
   
 }
