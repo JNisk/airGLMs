@@ -99,6 +99,10 @@ clean_interaction <- function(text_interaction){
 
 airglms <- function(config_file, verbose=FALSE, sort="default"){
 
+  if (verbose != FALSE && verbose != TRUE) {
+    stop("invalid value for option verbose (use either TRUE or FALSE)")
+  }
+	
   if (sort != "default" && sort != "AIC") {
     stop("invalid value for option sort (use either 'default' or 'AIC')")
   }
