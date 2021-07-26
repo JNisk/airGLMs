@@ -36,8 +36,8 @@ by the AIC values, use option `sort="AIC"`. Also, two kinds of output are produc
 and more detailed log, including stepwise the AIC values, is written to the output file specified by the user in the config file. For 
 detailed output during the run, you can add option `verbose=TRUE`.
 
-Do note that airglms will raise a warning if missing data (NA) is detected in columns that are included in the base model, dependent variables
-or independent variables. If you encounter this warning, make sure to preprocess your data in a meaningful manner, as AIC should not be
+**Do note that `airglms` will raise a warning if missing data (NA) is detected in columns that are included in the base model, dependent variables
+or independent variables.** If you encounter this warning, make sure to preprocess your data in a meaningful manner, as AIC should not be
 used with missing data points.
 
 In addition to the main functionality, you can also utilize helper functions `extract_variables` and `extract_interaction_variables`
