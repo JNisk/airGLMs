@@ -38,7 +38,8 @@ detailed output during the run, you can add option `verbose=TRUE`.
 
 **Do note that `airglms` will raise a warning if missing data (NA) is detected in columns that are included in the base model, dependent variables
 or independent variables.** If you encounter this warning, make sure to preprocess your data in a meaningful manner, as AIC should not be
-used with missing data points.
+used with missing data points. Also, **if dependent and independent variables overlap, the dependent variable will not be included as an
+independent variable when the model is being fitted**.
 
 In addition to the main functionality, you can also utilize helper functions `extract_variables` and `extract_interaction_variables`
 to extract variable names from text formulas and interaction terms, respectively. Finally, function `clean_interaction` can be used to
