@@ -320,6 +320,12 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
     # put all independent variables to vector
     # variables will be dropped from this vector one at a time if they are added to model
     remaining_variables <- config$independent
+	  
+    # make sure that dependent variable is not in independent variables
+    if (d %in% remaining_variables) {
+      warning(paste(c("independent variables include the dependent variable, skip ", d, " in model fitting"), sep=""))
+      remaining_variables <- remaining_variables[!remaining_variables == d]
+    }
     
     # test independent variables in a while loop
     # when improvement is set to false, loop ends
