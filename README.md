@@ -109,7 +109,7 @@ ensure constant whitespacing in text interaction terms.
     $metabolite2$formula
     [1] "metabolite2 ~ gender + population"
 
-    $metabolite2$AIC
+    $metabolite2$scores
                          metabolite2 ~ gender     + population
     metabolite2 ~ gender     244.134763387494                 
     sterilization            245.911514129003 243.788738728259
@@ -122,7 +122,7 @@ ensure constant whitespacing in text interaction terms.
     $metabolite3$formula
     [1] "metabolite3 ~ gender + population"
 
-    $metabolite3$AIC
+    $metabolite3$scores
                          metabolite3 ~ gender      + population
     metabolite3 ~ gender    -51.1899719495492                  
     sterilization             -49.24248213259 -184.472867756109
@@ -135,7 +135,7 @@ ensure constant whitespacing in text interaction terms.
     $metabolite4$formula
     [1] "metabolite4 ~ gender + population"
     
-    $metabolite4$AIC
+    $metabolite4$scores
                          metabolite4 ~ gender     + population
     metabolite4 ~ gender     187.072728054696                 
     sterilization            188.295383832006 185.785732566012
@@ -148,7 +148,7 @@ ensure constant whitespacing in text interaction terms.
     $metabolite5$formula
     [1] "metabolite5 ~ gender"
 
-    $metabolite5$AIC
+    $metabolite5$scores
                          metabolite5 ~ gender
     metabolite5 ~ gender    -208.903966099404
     sterilization           -207.753825389241
