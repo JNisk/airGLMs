@@ -71,7 +71,7 @@ ensure constant whitespacing in text interaction terms.
     6 animal6      1             2          1    1.263728    6.654097   0.1077216    5.745389   0.04984494
 
     > example_config <- system.file("extdata","example_config.txt",package="airGLMs")
-    > models <- airglms(example_config)
+    > models <- airglms(example_config, score="AIC")
     initiate airglms
 
     data.frame: example_data 
