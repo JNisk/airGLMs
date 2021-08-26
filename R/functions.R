@@ -109,7 +109,7 @@ airglms <- function(config_file, score, verbose=FALSE, sort="default"){
     stop("invalid value for option verbose (use either TRUE or FALSE)")
   }
 	
-  if (sort != "default" && sort != "AIC") {
+  if (sort != "default" && sort != "score") {
     stop("invalid value for option sort (use one of: default, score)")
   }
 
