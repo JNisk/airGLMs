@@ -4,12 +4,16 @@
 \alias{airglms}
 \title{Select generalized linear models automatically}
 \usage{
-airglms(config_file, verbose = FALSE, sort = "default")
+airglms(config_file, score, verbose = FALSE, sort = "default")
 }
 \arguments{
 \item{config_file}{Name of the configuration file with analysis settings.}
 
+\item{score}{Which information criteria to use (one of: AIC, BIC)}
+
 \item{verbose}{Print intermediate results of GLM selection while running (default: FALSE)}
+
+\item{sort}{How the dataframes in the resulting object will be sorted (default: in given order, score: by scores)}
 }
 \description{
 The main function of the package.
@@ -18,11 +22,10 @@ The dependent and independent variables and interactions to be tested,
 distributions and link functions, base model, data frame and
 output file name are determined by the user in a configuration file.
 GLM selection is performed with forward stepwise selection
-using Akaike information criteria.
-Returns an object with a character vector (selected model) and data frame
-(stepwise AIC values) for each dependent variable, and writes detailed
-output to the file specified.
+using AIC or BIC.
+Returns a character vector with models for each dependent variable,
+and writes detailed output to the file specified.
 }
 \examples{
-airglms("myconfig.txt")
+airglms("myconfig.txt", score="AIC")
 }
