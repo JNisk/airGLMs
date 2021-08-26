@@ -102,6 +102,8 @@ ensure constant whitespacing in text interaction terms.
     sterilization            4.41767088400479
     population               2.09808174145804
 
+    $metabolite1$score_type
+    [1] "AIC"
 
     $metabolite2
     $metabolite2$formula
@@ -112,7 +114,9 @@ ensure constant whitespacing in text interaction terms.
     metabolite2 ~ gender     244.134763387494                 
     sterilization            245.911514129003 243.788738728259
     population               241.950605943952                 
-    
+   
+    $metabolite2$score_type
+    [1] "AIC"    
 
     $metabolite3
     $metabolite3$formula
@@ -123,7 +127,9 @@ ensure constant whitespacing in text interaction terms.
     metabolite3 ~ gender    -51.1899719495492                  
     sterilization             -49.24248213259 -184.472867756109
     population              -186.321282984104                  
-
+    
+    $metabolite3$score_type
+    [1] "AIC" 
 
     $metabolite4
     $metabolite4$formula
@@ -134,7 +140,9 @@ ensure constant whitespacing in text interaction terms.
     metabolite4 ~ gender     187.072728054696                 
     sterilization            188.295383832006 185.785732566012
     population               184.361896509834                 
-    
+
+    $metabolite4$score_type
+    [1] "AIC" 
 
     $metabolite5
     $metabolite5$formula
@@ -146,8 +154,10 @@ ensure constant whitespacing in text interaction terms.
     sterilization           -207.753825389241
     population              -207.126193507209
     
-
-A full log of the selection process, including stepwise AIC values, can be found in the output file
+    $metabolite5$score_type
+    [1] "AIC"
+    
+A full log of the selection process, including stepwise scores, can be found in the output file
 generated during the run (default in the demo: `example_results.txt`).
 
 ## In-depth description
