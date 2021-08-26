@@ -4,11 +4,10 @@ Automatic Iterative Generalized Linear Model Selection
 ## Description
 
 airGLMs is an R package for automatic iterative generalized linear model (GLM) selection.
-It uses a forward stepwise selection process, calling the `glm` function available in base R and using Akaike information
-criteria (AIC) to select models. The user determines dependent and independent variables, variable interaction
-terms, distributions and link functions and output file name with plain text files. The package is focused on
-streamlined usability, as models for multiple dependent variables can be fitted with a single function call.
-It also utilizes an efficient iterative approach: variables are tested and added sequentially, which 
+It uses a forward stepwise selection process, calling the `glm` function available in base R and using AIC or BIC to select models.
+The user determines dependent and independent variables, variable interaction terms, distributions and link functions and output file
+name with plain text files. The package is focused on streamlined usability, as models for multiple dependent variables can be fitted
+with a single function call. It also utilizes an efficient iterative approach: variables are tested and added sequentially, which 
 avoids the need to exhaust the entire model space of all possible combinations of independent variables
 and interaction terms, thus saving runtime and memory load.
 
@@ -25,21 +24,21 @@ and interaction terms, thus saving runtime and memory load.
 ## Usage
 
     library("airGLMs")
-    models <- airglms(config_file)
+    models <- airglms(config_file, score="AIC")
 
-where `config_file` is a path to a configuration file with analysis settings. An example config file
+where `config_file` is a path to a configuration file with analysis settings and `score` is one of `AIC` or `BIC`. An example config file
 is included at [inst/extdata/example_config.txt](https://github.com/JNisk/airGLMs/blob/main/inst/extdata/example_config.txt).
 
-An object containing the selected formula and a dataframe with stepwise AIC values for each dependent variable is returned. By default,
+
+An object containing the selected formula and a dataframe with stepwise information criterion scores for each dependent variable is returned. By default,
 the dataframe is sorted by the order of the independent variables and interaction terms in the config file. To obtain dataframes sorted
-by the AIC values, use option `sort="AIC"`. Also, two kinds of output are produced: a brief description of the analysis parameters in the console,
-and more detailed log, including stepwise the AIC values, is written to the output file specified by the user in the config file. For 
+by the scores, use option `sort="score"`. Also, two kinds of output are produced: a brief description of the analysis parameters in the console,
+and more detailed log, including stepwise scores, is written to the output file specified by the user in the config file. For 
 detailed output during the run, you can add option `verbose=TRUE`.
 
 **Do note that `airglms` will raise a warning if missing data (NA) is detected in columns that are included in the base model, dependent variables
-or independent variables.** If you encounter this warning, make sure to preprocess your data in a meaningful manner, as AIC should not be
-used with missing data points. Also, **if dependent and independent variables overlap, the dependent variable will not be included as an
-independent variable when the model is being fitted**.
+or independent variables.** If you encounter this warning, make sure to preprocess your data in a meaningful manner. Also, **if dependent and independent
+variables overlap, the dependent variable will not be included as an independent variable when the model is being fitted**.
 
 In addition to the main functionality, you can also utilize helper functions `extract_variables` and `extract_interaction_variables`
 to extract variable names from text formulas and interaction terms, respectively. Finally, function `clean_interaction` can be used to
@@ -97,7 +96,7 @@ ensure constant whitespacing in text interaction terms.
     $metabolite1$formula
     [1] "metabolite1 ~ gender"
 
-    $metabolite1$AIC
+    $metabolite1$scores
                          metabolite1 ~ gender
     metabolite1 ~ gender     3.97547479855492
     sterilization            4.41767088400479
