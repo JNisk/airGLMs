@@ -88,24 +88,29 @@ clean_interaction <- function(text_interaction){
 #' distributions and link functions, base model, data frame and 
 #' output file name are determined by the user in a configuration file.
 #' GLM selection is performed with forward stepwise selection
-#' using Akaike information criteria.
-#' Returns an object with a character vector (selected model) and data frame
-#' (stepwise AIC values) for each dependent variable, and writes detailed
-#' output to the file specified.
+#' using AIC or BIC.
+#' Returns a character vector with models for each dependent variable,
+#' and writes detailed output to the file specified.
 #' @param config_file Name of the configuration file with analysis settings.
+#' @param score Which information criteria to use (one of: AIC, BIC)
 #' @param verbose Print intermediate results of GLM selection while running (default: FALSE)
+#' @param sort How the dataframes in the resulting object will be sorted (default: in given order, score: by scores)
 #' @export
 #' @examples
 #' airglms("myconfig.txt")
 
-airglms <- function(config_file, verbose=FALSE, sort="default"){
+airglms <- function(config_file, score, verbose=FALSE, sort="default"){
+
+  if (score != "AIC" && score != "BIC") {
+    stop("invalid value for option verbose (use one of: AIC, BIC)")
+  }
 
   if (verbose != FALSE && verbose != TRUE) {
     stop("invalid value for option verbose (use either TRUE or FALSE)")
   }
 	
   if (sort != "default" && sort != "AIC") {
-    stop("invalid value for option sort (use either 'default' or 'AIC')")
+    stop("invalid value for option sort (use one of: default, score)")
   }
 
   # create a named list where parameters from config file will be stored
@@ -274,7 +279,7 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
   # use one dependent variable (d) at a time
   for (d in config$dependent) {
 	
-    # nested list for storing formula and AIC values
+    # nested list for storing formula and scores
     selected_models[[d]] <- list()  
   
     if (verbose) {
@@ -291,7 +296,7 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
     
     write_log(file=log_file, "distribution:",distribution)
     write_log(file=log_file, "link:",link_function)
-    
+	
     # keep track of rounds
     iter_round = 1
     
@@ -309,27 +314,32 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
     
     # starting model
     model <- glm(formula, data=config$data, family=do.call(distribution, list(link=link_function)))
-    current_aic <- model$aic
-    df[text_formula,text_formula] <- current_aic
+	if (score == "AIC") {
+	  current_score <- model$aic
+	} else if (score == "BIC") {
+	  current_score <- BIC(model)
+	}
+    df[text_formula,text_formula] <- current_score
     
     if (verbose) {
-      cat(paste("\nstarting AIC",current_aic,"\n"))
+      cat(paste("\nstarting ",score," ",current_score,"\n"))
     }
-    write_log(file=log_file, "base AIC:",current_aic)
+    write_log(file=log_file, "base",score,":",current_score)
     
     # put all independent variables to vector
     # variables will be dropped from this vector one at a time if they are added to model
     remaining_variables <- config$independent
-	  
-    # make sure that dependent variable is not in independent variables
-    if (d %in% remaining_variables) {
-      warning(paste(c("independent variables include the dependent variable, skip ", d, " in model fitting"), sep=""))
-      remaining_variables <- remaining_variables[!remaining_variables == d]
-    }
+	
+	# make sure that dependent variable is not in independent variables
+	if (d %in% remaining_variables) {
+		warning(paste(c("independent variables include the dependent variable, skip ", d, " in model fitting"), sep=""))
+		remaining_variables <- remaining_variables[!remaining_variables == d]
+	}
     
     # test independent variables in a while loop
     # when improvement is set to false, loop ends
     improvement <- TRUE
+    
     
     if (verbose) {
       cat("\n- independent variables -\n")
@@ -340,8 +350,8 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
       write_log(file=log_file, round_text, iter_round)
       
       # initiate named vector with temporary value 0
-      # 0 will be replaced by AIC
-      temp_aic <- setNames(c(rep("",length(remaining_variables))), c(remaining_variables))
+      # 0 will be replaced by score
+      temp_score <- setNames(c(rep("",length(remaining_variables))), c(remaining_variables))
       
       ### independent variables
       
@@ -350,44 +360,50 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
         formula <- as.formula(paste(text_formula, "+", r, sep=" "))
         tmp_model <- glm(formula, data=config$data, family=do.call(distribution, list(link=link_function)))
         
-        # replace 0 with AIC
-        temp_aic[[r]] <- as.numeric(tmp_model$aic)
-        df[r,text_formula] <- as.numeric(tmp_model$aic)
+		if (score == "AIC") {
+		  tmp_score <- as.numeric(tmp_model$aic)
+		} else if (score == "BIC") {
+		  tmp_score <- as.numeric(BIC(tmp_model))
+		}
+		
+        # replace 0 with score
+        temp_score[[r]] <- tmp_score
+        df[r,text_formula] <- tmp_score
         
-        write_log(file=log_file, r,temp_aic[[r]])
+        write_log(file=log_file, r,temp_score[[r]])
       }
       
-      # find the variable that has the smallest AIC value
-      best_variable <- names(temp_aic)[which.min(temp_aic)]
+      # find the variable that has the smallest score
+      best_variable <- names(temp_score)[which.min(temp_score)]
       
-      write_log(file=log_file, "\nlargest delta AIC:",best_variable)
+      write_log(file=log_file, "\nlargest delta ",score,":",best_variable)
       
-      # report collected AIC values to screen
+      # report collected scores to screen
       if (verbose) {
-        cat(paste("\nround",iter_round,"AIC values\n"))
+        cat(paste("\nround",iter_round,score," values\n"))
         for (r in remaining_variables){
-          cat(paste(r,temp_aic[[r]],"\n"))
+          cat(paste(r,temp_score[[r]],"\n"))
         }
       }
       
-      # AIC difference > 2
-      if ((current_aic - as.numeric(temp_aic[[best_variable]])) > 2) {
+      # score difference > 2
+      if ((current_score - as.numeric(temp_score[[best_variable]])) > 2) {
         
-        # update AIC value
-        current_aic <- as.numeric(temp_aic[[best_variable]])
+        # update score
+        current_score <- as.numeric(temp_score[[best_variable]])
         # drop best variable from next round
         remaining_variables <- remaining_variables[!remaining_variables == best_variable]
         variable_order <- append(variable_order,best_variable)
 		
-        write_log(file=log_file, "AIC difference > 2, add variable to model and continue")
+        write_log(file=log_file, score," difference > 2, add variable to model and continue")
         
-        # update model and AIC dataframe
+        # update model and score dataframe
         text_formula <- paste(text_formula, "+", best_variable)
         df["tmp"] <- ""
         names(df)[length(df)] <- text_formula
         
         if (verbose) {
-          cat("delta AIC > 2\n")
+          cat(paste("delta",score,"> 2\n"))
           cat(paste("\nformula:",text_formula,"\n"))
         }
         
@@ -401,28 +417,28 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
           }
         }
         
-      # AIC difference < 2
+      # score difference < 2
       } else {
         # this triggers the loop to end
         improvement <- FALSE
         
         if (verbose) {
-          cat("delta AIC < 2\n")
+          cat(paste("delta",score,"< 2\n"))
 		  cat(paste("\nformula:",text_formula,"\n"))
         }
         
-        write_log(file=log_file, "AIC difference < 2, finished independent variables")
+        write_log(file=log_file, score," difference < 2, finished independent variables")
       }
     
       iter_round <- iter_round + 1
 
     }
 	
-    # update variable order by AIC
+    # update variable order by score
     # from smallest to largest
 
 	if (length(remaining_variables) > 0) {
-		remaining_variables_order <- names(temp_aic[order(unlist(temp_aic))])
+		remaining_variables_order <- names(temp_score[order(unlist(temp_score))])
 	} else {
 		remaining_variables_order <- c()
 	}
@@ -471,8 +487,8 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
         write_log(file=log_file, round_text, iter_round)
         
         # initiate named vector with temporary value 0
-        # 0 will be replaced by AIC
-        temp_aic <- setNames(c(rep(0,length(remaining_interactions))), c(remaining_interactions))
+        # 0 will be replaced by score
+        temp_score <- setNames(c(rep(0,length(remaining_interactions))), c(remaining_interactions))
         
         # test each interaction (i) at a time
         for (i in remaining_interactions) {
@@ -481,42 +497,47 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
           
           tmp_model <- glm(formula, data=config$data, family=do.call(distribution, list(link=link_function)))
           
-          # replace 0 with AIC and update df
-          temp_aic[[i]] <- as.numeric(tmp_model$aic)
-          df[i,text_formula] <- as.numeric(tmp_model$aic)
+          # replace 0 with score and update df
+		  if (score == "AIC") {
+	        current_score <- model$aic
+	      } else if (score == "BIC") {
+	        current_score <- BIC(model)
+	      }
+          temp_score[[i]] <- tmp_score
+          df[i,text_formula] <- tmp_score
 		  
-          write_log(file=log_file, i,temp_aic[[i]])
+          write_log(file=log_file, i,temp_score[[i]])
         }
         
-        # find the interaction that has the smallest AIC value
-        best_interaction <- names(temp_aic)[which.min(temp_aic)]
+        # find the interaction that has the smallest score
+        best_interaction <- names(temp_score)[which.min(temp_score)]
         
         write_log(file=log_file, "\nlargest delta AIC:",best_interaction)
         
-        # report collected AIC values to screen
+        # report collected scores to screen
         if (verbose) {
-          cat(paste("\nround",iter_round,"AIC values\n"))
+          cat(paste("\nround",iter_round,score," values\n"))
           for (i in remaining_interactions) {
-            cat(paste(i, temp_aic[[i]], "\n"))
+            cat(paste(i, temp_score[[i]], "\n"))
           }
         }
         
-        # AIC difference > 2
-        if ((current_aic - temp_aic[[best_interaction]]) > 2) {
+        # score difference > 2
+        if ((current_score - temp_score[[best_interaction]]) > 2) {
           
-          # update AIC value
-          current_aic <- temp_aic[[best_interaction]]
+          # update score
+          current_score <- temp_score[[best_interaction]]
           # drop best variable from next round
           remaining_interactions <- remaining_interactions[!remaining_interactions == best_interaction]
           variable_order <- append(variable_order,best_interaction)
 		  
-          write_log(file=log_file, "AIC difference > 2, add interaction to model and continue")
+          write_log(file=log_file, score," difference > 2, add interaction to model and continue")
           
           # update model and df
           text_formula <- paste(text_formula, "+", best_interaction)
 		  
           if (verbose) {
-            cat("delta AIC > 2\n")
+            cat(paste("delta",score, "> 2\n"))
             cat(paste("\nformula:",text_formula,"\n"))
           }
           
@@ -530,16 +551,16 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
             }     
           }
           
-          # AIC difference < 2
+        # score difference < 2
         } else {
           # this triggers the loop to end
           improvement <- FALSE
 		  
           if (verbose) {
-            cat(paste("delta AIC < 2\n"))
+            cat(paste("delta",score, "< 2\n"))
           }
 
-          write_log(file=log_file, "AIC difference < 2, finished interactions")
+          write_log(file=log_file, score," difference < 2, finished interactions")
         }
         iter_round <- iter_round + 1
         
@@ -558,11 +579,11 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
       cat(paste("\nfinal formula:",text_formula,"\n"))
     }
 	
-	# establish order of interactions by AIC
+	# establish order of interactions by score
 	# from smallest to largest
 
 	if (length(remaining_interactions) > 0) {
-		remaining_interactions_order <- names(temp_aic[order(unlist(temp_aic))])
+		remaining_interactions_order <- names(temp_score[order(unlist(temp_score))])
 	} else {
 		remaining_interactions_order <- c()
 	}
@@ -579,7 +600,7 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
     }
 		
 	# sort dataframe
-    if (sort == "AIC") {
+    if (sort == "score") {
       if (ncol(df) == 1) {
 	    # temporarily add dummy column to enable sorting
 		# sorting of one-column dataframes is tricky
@@ -591,7 +612,8 @@ airglms <- function(config_file, verbose=FALSE, sort="default"){
       }
     }
 	
-    selected_models[[d]][["AIC"]] <- df
+    selected_models[[d]][["scores"]] <- df
+	selected_models[[d]][["score_type"]] <- score
     
   }
   
