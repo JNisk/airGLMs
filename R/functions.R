@@ -499,9 +499,9 @@ airglms <- function(config_file, score, verbose=FALSE, sort="default"){
           
           # replace 0 with score and update df
 		  if (score == "AIC") {
-	        current_score <- model$aic
+	        current_score <- tmp_model$aic
 	      } else if (score == "BIC") {
-	        current_score <- BIC(model)
+	        current_score <- BIC(tmp_model)
 	      }
           temp_score[[i]] <- tmp_score
           df[i,text_formula] <- tmp_score
