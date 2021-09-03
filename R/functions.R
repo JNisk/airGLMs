@@ -608,7 +608,7 @@ airglms <- function(config_file, score, verbose=FALSE, sort="default"){
         df <- df[order(df[[1]], decreasing=TRUE),]
 		df$dummy <- NULL
       } else {
-		df <- df[match(rownames(df), variable_order),]
+		df <- df[match(variable_order, rownames(df)),]
       }
     }
 	
